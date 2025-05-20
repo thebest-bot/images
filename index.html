@@ -13,17 +13,10 @@
     <script>
         // Array of image filenames in the "images" folder
         const imageFiles = ["image1.jpg", "image2.jpg"];
+        
+        const randomIndex = Math.floor(Math.random() * imageFiles.length);
+        document.getElementById('randomImage').src =`images/${imageFiles[randomIndex]}`;
 
-        // Function to get a random image from the array
-        function getRandomImage() {
-            const randomIndex = Math.floor(Math.random() * imageFiles.length);
-            return `images/${imageFiles[randomIndex]}`;
-        }
-
-        // Set the random image source to the <img> element
-        document.getElementById('randomImage').src = getRandomImage();
-        // Load a random image on page load
-        window.onload = loadRandomImage;
     </script>
 </body>
 </html>
