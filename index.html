@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Image</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            border: 5px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <img id="randomImage" src="" alt="Random Image">
+        <div style="text-align: center;">
+            <button onclick="loadRandomImage()">Show Random Image</button>
+        </div>
+    </div>
+
+    <script>
+        async function getImagesFromFolder() {
+            try {
+                const response = await fetch('images/'); // Adjust the path if necessary
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const links = Array.from(doc.querySelectorAll('a'));
+                return links
+                    .map(link => link.getAttribute('href'))
+                    .filter(href => href.match(/\.(jpg|jpeg|png|gif)$/i))
+                    .map(image => `images/${image}`);
+            } catch (error) {
+                console.error('Error fetching images:', error);
+                return [];
+            }
+        }
+
+        async function loadRandomImage() {
+            const images = await getImagesFromFolder();
+            if (images.length > 0) {
+                const randomIndex = Math.floor(Math.random() * images.length);
+                const randomImage = images[randomIndex];
+                document.getElementById('randomImage').src = randomImage;
+            } else {
+                document.getElementById('randomImage').alt = 'No images found';
+            }
+        }
+
+        // Load a random image on page load
+        window.onload = loadRandomImage;
+    </script>
+</body>
+</html>
